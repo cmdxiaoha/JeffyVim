@@ -28,7 +28,7 @@ Plugin 'vim-scripts/indentpython.vim'
 Plugin 'scrooloose/syntastic'
 Plugin 'nvie/vim-flake8'
 Plugin 'kien/ctrlp.vim'
-"Bundle 'Valloric/YouCompleteMe'
+Plugin 'Valloric/YouCompleteMe'
 
 " end of Vundle
 call vundle#end()
@@ -193,6 +193,15 @@ let g:SimpylFold_docstring_preview=1
 
 " YouCompleteMe
 let g:ycm_autoclose_preview_window_after_completion=1
+let g:ycm_key_invoke_completion = '<C-X>'
+let g:ycm_confirm_extra_conf = 0
 map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
 
+" syntastic
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
 let python_highlight_all=1
+
