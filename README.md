@@ -11,6 +11,6 @@ To use 'taglist' plugin, please install ctags in your system.
 To use 'YouCompleteMe' plugin, please enable it in .vimrc and follow
 below link to install it:
 
-    https://github.com/Valloric/YouCompleteMe
+    [YouCompleteMe](https://github.com/Valloric/YouCompleteMe)
 
 Enjoy yourself!
