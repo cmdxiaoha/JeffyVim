@@ -28,7 +28,7 @@ Plugin 'vim-scripts/indentpython.vim'
 Plugin 'scrooloose/syntastic'
 Plugin 'nvie/vim-flake8'
 Plugin 'kien/ctrlp.vim'
-"Bundle 'Valloric/YouCompleteMe'
+Plugin 'Valloric/YouCompleteMe'
 
 " end of Vundle
 call vundle#end()
@@ -87,7 +87,6 @@ set fileformat=unix
 
 " Set face showing
 syntax on                           " highlight syntax
-colorscheme evening                 " set color scheme
 if has("gui_running")
     set guioptions-=T               " no toolbar
     set guioptions-=r               " no right-hand scrollbar
@@ -98,6 +97,9 @@ if has("gui_running")
     source $VIMRUNTIME/delmenu.vim  " the original menubar has an error on win32, so
     source $VIMRUNTIME/menu.vim     " use this menubar
     language messages zh_CN.utf-8   " use chinese messages if has
+    colorscheme evening             " set color scheme
+else
+    colorscheme default
 endif
 
 " Restore the last quit position when open file.
@@ -181,7 +183,7 @@ let g:NERDTreeWinPos = "right"
 let g:NERDTreeWinSize = 30
 let g:NERDTreeShowLineNumbers = 1
 let g:NERDTreeQuitOnOpen = 1
-let g:NERDTreeIgnore=['\.o$', '\~$']
+let g:NERDTreeIgnore = ['\.o$', '\~$']
 nmap <Leader>f :NERDTreeToggle<CR>
 nmap <Leader>F :NERDTreeFind<CR>
 
@@ -189,10 +191,11 @@ nmap <Leader>F :NERDTreeFind<CR>
 source $VIMRUNTIME/ftplugin/man.vim
 
 " SimpylFold
-let g:SimpylFold_docstring_preview=1
+let g:SimpylFold_docstring_preview = 1
 
 " YouCompleteMe
-let g:ycm_autoclose_preview_window_after_completion=1
+let g:ycm_autoclose_preview_window_after_completion = 1
+let g:ycm_key_invoke_completion = '<C-x>'
 map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
 
 let python_highlight_all=1
