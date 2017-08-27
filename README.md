@@ -6,11 +6,10 @@ Installation
 
 Run 'install.sh' to install, this will install the plugins automatically.
 
-To use 'taglist' plugin, please install ctags in your system.
+1. Please install ctags in your system to use 'taglist' plugin.
 
-To use 'YouCompleteMe' plugin, please enable it in .vimrc and follow
-below link to install it:
+2. Please follow below link to install 'YouCompleteMe' plugin:
 
     https://github.com/Valloric/YouCompleteMe
 
-Enjoy yourself!
+3. Enjoy yourself!
