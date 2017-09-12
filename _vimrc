@@ -214,7 +214,7 @@ let g:SimpylFold_docstring_preview = 1
 
 " YouCompleteMe
 let g:ycm_autoclose_preview_window_after_completion = 1
-let g:ycm_key_invoke_completion = '<C-;>'
+let g:ycm_key_invoke_completion = '<C-x>'
 let g:ycm_confirm_extra_conf = 0
 let g:ycm_complete_in_comments = 1
 let g:ycm_global_ycm_extra_conf = '~/.ycm_extra_conf.py'
