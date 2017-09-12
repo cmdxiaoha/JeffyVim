@@ -1,6 +1,6 @@
-"
-" JeffyVim configuration
-"
+""""""""""""""""""""""""""
+" JeffyVim configuration "
+""""""""""""""""""""""""""
 
 set nocompatible " out of Vi compatible mode
 
@@ -14,25 +14,38 @@ call vundle#begin()
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
 
-" plugins
-Plugin 'jlanzarotta/bufexplorer'
-Plugin 'vim-scripts/CmdlineComplete'
-Plugin 'vim-scripts/Mark'
+" interface plugins
+Plugin 'Lokaltog/vim-powerline'
+Plugin 'altercation/vim-colors-solarized'
+
+" file management plugins
 Plugin 'vim-scripts/mru.vim'
-Plugin 'scrooloose/nerdcommenter'
+Plugin 'jlanzarotta/bufexplorer'
 Plugin 'scrooloose/nerdtree'
+Plugin 'kien/ctrlp.vim'
+
+" file view plugins
 Plugin 'vim-scripts/taglist.vim'
-Plugin 'tpope/vim-fugitive'
+Plugin 'vim-scripts/Mark'
 Plugin 'tmhedberg/SimpylFold'
+
+" file edit plugins
+Plugin 'scrooloose/nerdcommenter'
 Plugin 'vim-scripts/indentpython.vim'
+Plugin 'tpope/vim-fugitive'
 Plugin 'scrooloose/syntastic'
 Plugin 'nvie/vim-flake8'
-Plugin 'kien/ctrlp.vim'
+
+" auto completion plugins
 Plugin 'Valloric/YouCompleteMe'
+Plugin 'SirVer/ultisnips'
+Plugin 'honza/vim-snippets'
+Plugin 'vim-scripts/CmdlineComplete'
 
 " end of Vundle
 call vundle#end()
 filetype plugin indent on
+
 " }}}
 
 " Global configuration: {{{
@@ -46,12 +59,11 @@ set wildmenu                        " enhanced command completion
 set wildmode=list:longest,full      " command completion mode
 set laststatus=2                    " always show the status line
 set mouse=a                         " use mouse in all mode
-set foldenable                      " fold lines
-set foldmethod=indent               " fold as indent
-set foldlevel=99                    " don't fold by default
 set noerrorbells                    " do not use error bell
 set novisualbell                    " do not use visual bell
 set t_vb=                           " do not use terminal bell
+set foldenable                      " fold lines
+set foldlevel=99                    " don't fold at startup 
 
 set wildignore=.svn,.git,*.swp,*.bak,*~,*.o,*.a
 set autowrite                       " auto save before commands like :next and :make
@@ -78,35 +90,45 @@ set noswapfile                      " do not create swap file
 set backupcopy=yes                  " overwrite the original file
 set clipboard=unnamed               " use system clipboard
 
-" Set file encoding
+" file encoding setting
 set encoding=utf-8
 set termencoding=utf-8
 set fileencoding=utf-8
 set fileencodings=gb2312,utf-8,gbk
 set fileformat=unix
 
-" Set face showing
+" set interface
 syntax on                           " highlight syntax
+set background=dark
+try
+    colorscheme solarized
+catch /^Vim\%((\a\+)\)\=:E185/
+    colorscheme desert
+endtry
+
 if has("gui_running")
     set guioptions-=T               " no toolbar
     set guioptions-=r               " no right-hand scrollbar
     set guioptions-=R               " no right-hand vertically scrollbar
     set guioptions-=l               " no left-hand scrollbar
     set guioptions-=L               " no left-hand vertically scrollbar
-    autocmd GUIEnter * simalt ~x    " maximum window on startup
+    "autocmd GUIEnter * simalt ~x    " maximum window on startup
+    autocmd GUIEnter * win 100 30   " maximum window on startup
     source $VIMRUNTIME/delmenu.vim  " the original menubar has an error on win32, so
     source $VIMRUNTIME/menu.vim     " use this menubar
     language messages zh_CN.utf-8   " use chinese messages if has
-    colorscheme evening             " set color scheme
-else
-    colorscheme default
 endif
+
+" set folder method independently
+autocmd FileType * set foldmethod=marker
+autocmd FileType c,cpp,python set foldmethod=indent
 
 " Restore the last quit position when open file.
 autocmd BufReadPost *
     \ if line("'\"") > 0 && line("'\"") <= line("$") |
     \     exe "normal g'\"" |
     \ endif
+
 " }}}
 
 " Key Bindings: {{{
@@ -122,7 +144,7 @@ nmap <C-j> <C-w>j
 nmap <C-k> <C-w>k
 nmap <C-l> <C-w>l
 
-" Don't use Ex mode, use Q for formatting
+" don't use Ex mode, use Q for formatting
 map Q gq
 
 " make Y consistent with C and D
@@ -131,19 +153,12 @@ nnoremap Y y$
 " toggle highlight trailing whitespace
 nmap <silent> <leader>l :set nolist!<CR>
 
-" Ctrl-E to switch between 2 last buffers
-nmap <C-E> :b#<CR>
-
-" ,e to fast finding files. just type beginning of a name and hit TAB
-nmap <leader>e :e **/
+" switch between 2 last buffers
+nmap <leader>s :b#<CR>
 
 " Make shift-insert work like in Xterm
 map <S-Insert> <MiddleMouse>
 map! <S-Insert> <MiddleMouse>
-
-" ,n to get the next location (compilation errors, grep etc)
-"nmap <leader>n :cn<CR>
-"nmap <leader>p :cp<CR>
 
 " Ctrl-N to disable search match highlight
 nmap <silent> <C-N> :silent noh<CR>
@@ -158,6 +173,10 @@ nnoremap g#  g#z
 " }}}
 
 " Plugin Settings: {{{
+
+" Powerline
+let g:Powerline_colorscheme='solarized256'
+
 " mru
 let MRU_Window_Height = 10
 nmap <Leader>h :MRU<cr>
@@ -194,10 +213,16 @@ source $VIMRUNTIME/ftplugin/man.vim
 let g:SimpylFold_docstring_preview = 1
 
 " YouCompleteMe
-let g:ycm_autoclose_preview_window_after_completion=1
-let g:ycm_key_invoke_completion = '<C-x>'
+let g:ycm_autoclose_preview_window_after_completion = 1
+let g:ycm_key_invoke_completion = '<C-;>'
 let g:ycm_confirm_extra_conf = 0
+let g:ycm_complete_in_comments = 1
+let g:ycm_global_ycm_extra_conf = '~/.ycm_extra_conf.py'
 map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
 
-let python_highlight_all=1
+" UltiSnips
+let g:UltiSnipsExpandTrigger = "<C-j>"
+let g:UltiSnipsJumpForwardTrigger = "<C-j>"
+let g:UltiSnipsJumpBackwardTrigger = "<C-k>"
 
+" }}}
