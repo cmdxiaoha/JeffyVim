@@ -21,25 +21,24 @@ let g:Powerline_colorscheme = 'solarized256'
 Plugin 'altercation/vim-colors-solarized'
 " color scheme for console version
 Plugin 'tomasr/molokai'
+
+" file,MRU,buffer serching
+Plugin 'kien/ctrlp.vim'
 " buffer explorer
 Plugin 'jlanzarotta/bufexplorer'
 " file explorer
 Plugin 'scrooloose/nerdtree'
-let g:NERDTreeIgnore = ['\.o$', '\~$', '\.pyc$', '\.obj$', '\.git$', '\.svn$']
 " tag explorer
 Plugin 'majutsushi/tagbar'
 let g:tagbar_width = 30
 let g:tagbar_autofocus = 1
-" file serching
-Plugin 'kien/ctrlp.vim'
+
 " highlight word in different colors
 Plugin 'vim-scripts/Mark'
 " easy motion
 Plugin 'easymotion/vim-easymotion'
 " quick [un]comment lines
 Plugin 'scrooloose/nerdcommenter'
-" git migration
-Plugin 'tpope/vim-fugitive'
 " syntax check
 Plugin 'scrooloose/syntastic'
 " auto completion
@@ -55,12 +54,22 @@ let g:UltiSnipsExpandTrigger = "<C-j>"
 let g:UltiSnipsJumpForwardTrigger = "<C-j>"
 let g:UltiSnipsJumpBackwardTrigger = "<C-k>"
 " command line completion
-"Plugin 'vim-scripts/CmdlineComplete'
+Plugin 'vim-scripts/CmdlineComplete'
+" highlight tailing whitespace
+Plugin 'bronson/vim-trailing-whitespace'
+" auto closing of quotes, parenthesis, bracket, etc.
+Plugin 'Raimondi/delimitMate'
+autocmd FileType python let b:delimitMate_nesting_quotes = ['"']
+" align text
+Plugin 'godlygeek/tabular'
+
+" git migration
+Plugin 'tpope/vim-fugitive'
+
 " syntax check for python
 Plugin 'nvie/vim-flake8'
 " better fold for python
-"Plugin 'tmhedberg/SimpylFold'
-let g:SimpylFold_docstring_preview = 1
+Plugin 'tmhedberg/SimpylFold'
 " better indent for python
 Plugin 'vim-scripts/indentpython.vim'
 
@@ -144,11 +153,11 @@ if has("gui_running")
     set guioptions-=l               " no left-hand scrollbar
     set guioptions-=L               " no left-hand vertically scrollbar
     "autocmd GUIEnter * simalt ~x    " maximum window on startup
-    autocmd GUIEnter * win 100 30   " maximum window on startup
+    autocmd GUIEnter * win 110 32   " maximum window on startup
     source $VIMRUNTIME/delmenu.vim  " the original menubar has an error on win32, so
     source $VIMRUNTIME/menu.vim     " use this menubar
     language messages zh_CN.utf-8   " use chinese messages if has
-    set cursorline
+    set guifont=consolas:h12
 endif
 
 " set folder method independently
@@ -156,15 +165,15 @@ autocmd FileType c,cpp,python setlocal foldmethod=indent
 
 " restore the last quit position when open file.
 autocmd BufReadPost *
-    \ if line("'\"") > 0 && line("'\"") <= line("$") |
-    \     exe "normal g'\"" |
-    \ endif
+            \ if line("'\"") > 0 && line("'\"") <= line("$") |
+            \     exe "normal g'\"" |
+            \ endif
 
 " close vim if the only window left open is a NERDTree
 autocmd BufEnter * 
-    \ if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | 
-    \     q | 
-    \ endif
+            \ if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | 
+            \     q | 
+            \ endif
 
 " }}}
 
@@ -195,9 +204,10 @@ nmap <leader>l :silent noh<CR>
 nmap <silent> <leader>M <Plug>MarkRegex
 
 "  open CtrlP to search file to edit
-let g:ctrlp_map = '<leader>e'
+let g:ctrlp_map = '<leader>sf'
 let g:ctrlp_cmd = 'CtrlP'
-nmap <leader>r :CtrlPMRUFiles<CR>
+nmap <leader>sr :CtrlPMRUFiles<CR>
+nmap <leader>sb :CtrlPBuffer<CR>
 
 " open file explorer
 nmap <leader>f :NERDTreeToggle<CR>
@@ -207,6 +217,14 @@ nmap <leader>t :TagbarToggle<cr>
 
 " goto definition
 nmap <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
+
+" delete tailing whitespace
+nmap <leader><space> :FixWhitespace<CR>
+vmap <leader><space> :FixWhitespace<CR>
+
+" align text with tabularize
+nmap <leader>a :Tab /
+vmap <leader>a :Tab /
 
 " }}}
 
