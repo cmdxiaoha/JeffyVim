@@ -59,6 +59,7 @@ Plugin 'vim-scripts/CmdlineComplete'
 Plugin 'bronson/vim-trailing-whitespace'
 " auto closing of quotes, parenthesis, bracket, etc.
 Plugin 'Raimondi/delimitMate'
+let delimitMate_expand_cr = 1
 autocmd FileType python let b:delimitMate_nesting_quotes = ['"']
 " align text
 Plugin 'godlygeek/tabular'
@@ -156,7 +157,11 @@ if has("gui_running")
     source $VIMRUNTIME/delmenu.vim  " the original menubar has an error on win32, so
     source $VIMRUNTIME/menu.vim     " use this menubar
     language messages zh_CN.utf-8   " use chinese messages if has
-    set guifont=consolas:h12        " set font
+    if has("win32")
+        set guifont=consolas:h12    " set font for windows
+    else
+        set guifont=DejavuSansMono\ 12 " set font for unix
+    endif
 endif
 
 " set folder method independently
