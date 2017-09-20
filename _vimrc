@@ -88,6 +88,8 @@ set t_Co=256                        " tell terminal supports 256 colors
 set foldenable                      " fold lines
 set foldmethod=marker               " default use marker to fold
 set foldlevel=99                    " don't fold at startup
+set cursorline                      "  highlight current line
+set cursorcolumn                    " highlight current column
 
 set wildignore=.svn,.git,*.swp,*.bak,*~,*.o,*.a
 set autowrite                       " auto save before commands like :next and :make
@@ -123,16 +125,14 @@ set fileformat=unix
 
 " set colorscheme
 syntax on                           " highlight syntax
+set background=dark
 try
     if has("gui_running")
-        set background=dark
         colorscheme solarized
     else
-        set background=light
         colorscheme molokai
     endif
 catch /^Vim\%((\a\+)\)\=:E185/
-    set background=dark
     colorscheme desert
 endtry
 
