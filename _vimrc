@@ -97,7 +97,7 @@ set t_Co=256                        " tell terminal supports 256 colors
 set foldenable                      " fold lines
 set foldmethod=marker               " default use marker to fold
 set foldlevel=99                    " don't fold at startup
-set cursorline                      "  highlight current line
+set cursorline                      " highlight current line
 set cursorcolumn                    " highlight current column
 
 set wildignore=.svn,.git,*.swp,*.bak,*~,*.o,*.a
@@ -134,7 +134,7 @@ set fileformat=unix
 
 " set colorscheme
 syntax on                           " highlight syntax
-set background=dark
+set background=dark                 " I link dark background
 try
     if has("gui_running")
         colorscheme solarized
@@ -152,12 +152,11 @@ if has("gui_running")
     set guioptions-=R               " no right-hand vertically scrollbar
     set guioptions-=l               " no left-hand scrollbar
     set guioptions-=L               " no left-hand vertically scrollbar
-    "autocmd GUIEnter * simalt ~x    " maximum window on startup
     autocmd GUIEnter * win 110 32   " maximum window on startup
     source $VIMRUNTIME/delmenu.vim  " the original menubar has an error on win32, so
     source $VIMRUNTIME/menu.vim     " use this menubar
     language messages zh_CN.utf-8   " use chinese messages if has
-    set guifont=consolas:h12
+    set guifont=consolas:h12        " set font
 endif
 
 " set folder method independently
@@ -170,9 +169,9 @@ autocmd BufReadPost *
             \ endif
 
 " close vim if the only window left open is a NERDTree
-autocmd BufEnter * 
-            \ if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | 
-            \     q | 
+autocmd BufEnter *
+            \ if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") |
+            \     q |
             \ endif
 
 " }}}
@@ -200,9 +199,6 @@ map! <S-Insert> <MiddleMouse>
 " disable search match highlight
 nmap <leader>l :silent noh<CR>
 
-" mark
-nmap <silent> <leader>M <Plug>MarkRegex
-
 "  open CtrlP to search file to edit
 let g:ctrlp_map = '<leader>sf'
 let g:ctrlp_cmd = 'CtrlP'
@@ -216,7 +212,7 @@ nmap <leader>f :NERDTreeToggle<CR>
 nmap <leader>t :TagbarToggle<cr>
 
 " goto definition
-nmap <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
+nmap <leader>g :YcmCompleter GoToDefinitionElseDeclaration<CR>
 
 " delete tailing whitespace
 nmap <leader><space> :FixWhitespace<CR>
