@@ -4,7 +4,7 @@
 
 set nocompatible " out of Vi compatible mode
 
-" Vundle configuration: {{{
+" Plugin Management: {{{
 filetype off
 
 " set the runtime path to include Vundle and initialize
@@ -14,33 +14,55 @@ call vundle#begin()
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
 
-" interface plugins
+" graceful status line
 Plugin 'Lokaltog/vim-powerline'
+let g:Powerline_colorscheme = 'solarized256'
+" color scheme for gui version
 Plugin 'altercation/vim-colors-solarized'
-
-" file management plugins
-Plugin 'vim-scripts/mru.vim'
+" color scheme for console version
+Plugin 'tomasr/molokai'
+" buffer explorer
 Plugin 'jlanzarotta/bufexplorer'
+" file explorer
 Plugin 'scrooloose/nerdtree'
+let g:NERDTreeIgnore = ['\.o$', '\~$', '\.pyc$', '\.obj$', '\.git$', '\.svn$']
+" tag explorer
+Plugin 'majutsushi/tagbar'
+let g:tagbar_width = 30
+let g:tagbar_autofocus = 1
+" file serching
 Plugin 'kien/ctrlp.vim'
-
-" file view plugins
-Plugin 'vim-scripts/taglist.vim'
+" highlight word in different colors
 Plugin 'vim-scripts/Mark'
-Plugin 'tmhedberg/SimpylFold'
-
-" file edit plugins
+" easy motion
+Plugin 'easymotion/vim-easymotion'
+" quick [un]comment lines
 Plugin 'scrooloose/nerdcommenter'
-Plugin 'vim-scripts/indentpython.vim'
+" git migration
 Plugin 'tpope/vim-fugitive'
+" syntax check
 Plugin 'scrooloose/syntastic'
-Plugin 'nvie/vim-flake8'
-
-" auto completion plugins
+" auto completion
 Plugin 'Valloric/YouCompleteMe'
-Plugin 'SirVer/ultisnips'
+let g:ycm_autoclose_preview_window_after_completion = 1
+let g:ycm_key_invoke_completion = '<C-x>'
+let g:ycm_confirm_extra_conf = 0
+let g:ycm_global_ycm_extra_conf = '~/.ycm_extra_conf.py'
+" snippets completion
 Plugin 'honza/vim-snippets'
-Plugin 'vim-scripts/CmdlineComplete'
+Plugin 'SirVer/ultisnips'
+let g:UltiSnipsExpandTrigger = "<C-j>"
+let g:UltiSnipsJumpForwardTrigger = "<C-j>"
+let g:UltiSnipsJumpBackwardTrigger = "<C-k>"
+" command line completion
+"Plugin 'vim-scripts/CmdlineComplete'
+" syntax check for python
+Plugin 'nvie/vim-flake8'
+" better fold for python
+"Plugin 'tmhedberg/SimpylFold'
+let g:SimpylFold_docstring_preview = 1
+" better indent for python
+Plugin 'vim-scripts/indentpython.vim'
 
 " end of Vundle
 call vundle#end()
@@ -62,8 +84,10 @@ set mouse=a                         " use mouse in all mode
 set noerrorbells                    " do not use error bell
 set novisualbell                    " do not use visual bell
 set t_vb=                           " do not use terminal bell
+set t_Co=256                        " tell terminal supports 256 colors
 set foldenable                      " fold lines
-set foldlevel=99                    " don't fold at startup 
+set foldmethod=marker               " default use marker to fold
+set foldlevel=99                    " don't fold at startup
 
 set wildignore=.svn,.git,*.swp,*.bak,*~,*.o,*.a
 set autowrite                       " auto save before commands like :next and :make
@@ -97,15 +121,22 @@ set fileencoding=utf-8
 set fileencodings=gb2312,utf-8,gbk
 set fileformat=unix
 
-" set interface
+" set colorscheme
 syntax on                           " highlight syntax
-set background=dark
 try
-    colorscheme solarized
+    if has("gui_running")
+        set background=dark
+        colorscheme solarized
+    else
+        set background=light
+        colorscheme molokai
+    endif
 catch /^Vim\%((\a\+)\)\=:E185/
+    set background=dark
     colorscheme desert
 endtry
 
+" set gui interface
 if has("gui_running")
     set guioptions-=T               " no toolbar
     set guioptions-=r               " no right-hand scrollbar
@@ -117,16 +148,22 @@ if has("gui_running")
     source $VIMRUNTIME/delmenu.vim  " the original menubar has an error on win32, so
     source $VIMRUNTIME/menu.vim     " use this menubar
     language messages zh_CN.utf-8   " use chinese messages if has
+    set cursorline
 endif
 
 " set folder method independently
-autocmd FileType * set foldmethod=marker
-autocmd FileType c,cpp,python set foldmethod=indent
+autocmd FileType c,cpp,python setlocal foldmethod=indent
 
-" Restore the last quit position when open file.
+" restore the last quit position when open file.
 autocmd BufReadPost *
     \ if line("'\"") > 0 && line("'\"") <= line("$") |
     \     exe "normal g'\"" |
+    \ endif
+
+" close vim if the only window left open is a NERDTree
+autocmd BufEnter * 
+    \ if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | 
+    \     q | 
     \ endif
 
 " }}}
@@ -135,7 +172,7 @@ autocmd BufReadPost *
 let mapleader = ","
 let maplocalleader = "\\"
 
-" map : -> toggle fold
+" map space -> toggle fold
 map <Space> za
 
 " move between windows
@@ -144,85 +181,32 @@ nmap <C-j> <C-w>j
 nmap <C-k> <C-w>k
 nmap <C-l> <C-w>l
 
-" don't use Ex mode, use Q for formatting
-map Q gq
-
-" make Y consistent with C and D
-nnoremap Y y$
-
-" toggle highlight trailing whitespace
-nmap <silent> <leader>l :set nolist!<CR>
-
 " switch between 2 last buffers
-nmap <leader>s :b#<CR>
+nmap <leader>bb :b#<CR>
 
-" Make shift-insert work like in Xterm
+" make shift-insert as paste in insert mode
 map <S-Insert> <MiddleMouse>
 map! <S-Insert> <MiddleMouse>
 
-" Ctrl-N to disable search match highlight
-nmap <silent> <C-N> :silent noh<CR>
+" disable search match highlight
+nmap <leader>l :silent noh<CR>
 
-" center display after searching
-nnoremap n   nzz
-nnoremap N   Nzz
-nnoremap *   *zz
-nnoremap #   #zz
-nnoremap g*  g*zz
-nnoremap g#  g#z
-" }}}
+" mark
+nmap <silent> <leader>M <Plug>MarkRegex
 
-" Plugin Settings: {{{
+"  open CtrlP to search file to edit
+let g:ctrlp_map = '<leader>e'
+let g:ctrlp_cmd = 'CtrlP'
+nmap <leader>r :CtrlPMRUFiles<CR>
 
-" Powerline
-let g:Powerline_colorscheme='solarized256'
+" open file explorer
+nmap <leader>f :NERDTreeToggle<CR>
 
-" mru
-let MRU_Window_Height = 10
-nmap <Leader>h :MRU<cr>
+" open tag bar
+nmap <leader>t :TagbarToggle<cr>
 
-" taglist
-let g:Tlist_WinWidth = 25
-let g:Tlist_Use_Right_Window = 0
-let g:Tlist_Auto_Update = 1
-let g:Tlist_Process_File_Always = 1
-let g:Tlist_Exit_OnlyWindow = 1
-let g:Tlist_Show_One_File = 1
-let g:Tlist_Enable_Fold_Column = 0
-let g:Tlist_Auto_Highlight_Tag = 1
-let g:Tlist_GainFocus_On_ToggleOpen = 1
-nmap <Leader>t :TlistToggle<cr>
-
-" nerdcommenter
-let g:NERDDefaultAlign = 'left'
-let g:NERDCustomDelimiters = { 'c': { 'left': '//' } }
-
-" nerdtree
-let g:NERDTreeWinPos = "right"
-let g:NERDTreeWinSize = 30
-let g:NERDTreeShowLineNumbers = 1
-let g:NERDTreeQuitOnOpen = 1
-let g:NERDTreeIgnore = ['\.o$', '\~$']
-nmap <Leader>f :NERDTreeToggle<CR>
-nmap <Leader>F :NERDTreeFind<CR>
-
-" man.vim - view man page in VIM
-source $VIMRUNTIME/ftplugin/man.vim
-
-" SimpylFold
-let g:SimpylFold_docstring_preview = 1
-
-" YouCompleteMe
-let g:ycm_autoclose_preview_window_after_completion = 1
-let g:ycm_key_invoke_completion = '<C-x>'
-let g:ycm_confirm_extra_conf = 0
-let g:ycm_complete_in_comments = 1
-let g:ycm_global_ycm_extra_conf = '~/.ycm_extra_conf.py'
-map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
-
-" UltiSnips
-let g:UltiSnipsExpandTrigger = "<C-j>"
-let g:UltiSnipsJumpForwardTrigger = "<C-j>"
-let g:UltiSnipsJumpBackwardTrigger = "<C-k>"
+" goto definition
+nmap <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
 
 " }}}
+
