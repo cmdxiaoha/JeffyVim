@@ -1,86 +1,42 @@
-""""""""""""""""""""""""""
-" JeffyVim configuration "
-""""""""""""""""""""""""""
+"=============================================================================
+" Vim configuration for C/C++/Python programming.
+"=============================================================================
 
-set nocompatible " out of Vi compatible mode
+""" Basic Settings: {{{
+" out of Vi compatible mode
+set nocompatible
 
-" Plugin Management: {{{
-filetype off
+" search setting
+set incsearch                       " incremental search
+set hlsearch                        " highlight search match
+set ignorecase                      " do case insensitive matching
+set smartcase                       " do not ignore if search pattern has CAPS
 
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
+" backup setting
+set nobackup                        " do not create backup file
+set noswapfile                      " do not create swap file
+set backupcopy=yes                  " overwrite the original file
 
-" let Vundle manage Vundle, required
-Plugin 'VundleVim/Vundle.vim'
+" tab setting
+set tabstop=4                       " number of spaces in a tab
+set softtabstop=4                   " insert and delete space of <tab>
+set shiftwidth=4                    " number of spaces for indent
+set expandtab                       " expand tabs into spaces
 
-" graceful status line
-Plugin 'Lokaltog/vim-powerline'
-let g:Powerline_colorscheme = 'solarized256'
-" color scheme for gui version
-Plugin 'altercation/vim-colors-solarized'
-" color scheme for console version
-Plugin 'tomasr/molokai'
+" file encoding setting
+set encoding=utf-8
+set termencoding=utf-8
+set fileencoding=utf-8
+set fileencodings=gb2312,utf-8,gbk
+set fileformat=unix
 
-" file,MRU,buffer serching
-Plugin 'kien/ctrlp.vim'
-" buffer explorer
-Plugin 'jlanzarotta/bufexplorer'
-" file explorer
-Plugin 'scrooloose/nerdtree'
-" tag explorer
-Plugin 'majutsushi/tagbar'
-let g:tagbar_width = 30
-let g:tagbar_autofocus = 1
+" folder setting
+set foldenable                      " fold lines
+set foldmethod=marker               " default use marker to fold
+set foldlevel=99                    " don't fold at startup
+autocmd FileType c,cpp,python setlocal foldmethod=syntax
 
-" highlight word in different colors
-Plugin 'vim-scripts/Mark'
-" easy motion
-Plugin 'easymotion/vim-easymotion'
-" quick [un]comment lines
-Plugin 'scrooloose/nerdcommenter'
-" syntax check
-Plugin 'scrooloose/syntastic'
-" auto completion
-Plugin 'Valloric/YouCompleteMe'
-let g:ycm_autoclose_preview_window_after_completion = 1
-let g:ycm_key_invoke_completion = '<C-x>'
-let g:ycm_confirm_extra_conf = 0
-let g:ycm_global_ycm_extra_conf = '~/.ycm_extra_conf.py'
-" snippets completion
-Plugin 'honza/vim-snippets'
-Plugin 'SirVer/ultisnips'
-let g:UltiSnipsExpandTrigger = "<C-j>"
-let g:UltiSnipsJumpForwardTrigger = "<C-j>"
-let g:UltiSnipsJumpBackwardTrigger = "<C-k>"
-" command line completion
-Plugin 'vim-scripts/CmdlineComplete'
-" highlight tailing whitespace
-Plugin 'bronson/vim-trailing-whitespace'
-" auto closing of quotes, parenthesis, bracket, etc.
-Plugin 'Raimondi/delimitMate'
-let delimitMate_expand_cr = 1
-autocmd FileType python let b:delimitMate_nesting_quotes = ['"']
-" align text
-Plugin 'godlygeek/tabular'
-
-" git migration
-Plugin 'tpope/vim-fugitive'
-
-" syntax check for python
-Plugin 'nvie/vim-flake8'
-" better fold for python
-Plugin 'tmhedberg/SimpylFold'
-" better indent for python
-Plugin 'vim-scripts/indentpython.vim'
-
-" end of Vundle
-call vundle#end()
-filetype plugin indent on
-
-" }}}
-
-" Global configuration: {{{
+" misc setting
 set number                          " show line number
 set numberwidth=3                   " minimal culumns for line numbers
 set textwidth=0                     " do not wrap words (insert)
@@ -95,13 +51,6 @@ set noerrorbells                    " do not use error bell
 set novisualbell                    " do not use visual bell
 set t_vb=                           " do not use terminal bell
 set t_Co=256                        " tell terminal supports 256 colors
-set foldenable                      " fold lines
-set foldmethod=marker               " default use marker to fold
-set foldlevel=99                    " don't fold at startup
-set cursorline                      " highlight current line
-set cursorcolumn                    " highlight current column
-
-set wildignore=.svn,.git,*.swp,*.bak,*~,*.o,*.a
 set autowrite                       " auto save before commands like :next and :make
 set hidden                          " enable multiple modified buffers
 set history=100                     " record recent used command history
@@ -112,39 +61,7 @@ set pumheight=10                    " complete popup height
 set scrolloff=5                     " minimal number of screen lines to keep beyond the cursor
 set autoindent                      " automatically indent new line
 set cinoptions=:0,l1,g0,t0,(0,(s    " C kind language indent options
-
-set tabstop=4                       " number of spaces in a tab
-set softtabstop=4                   " insert and delete space of <tab>
-set shiftwidth=4                    " number of spaces for indent
-set expandtab                       " expand tabs into spaces
-set incsearch                       " incremental search
-set hlsearch                        " highlight search match
-set ignorecase                      " do case insensitive matching
-set smartcase                       " do not ignore if search pattern has CAPS
-set nobackup                        " do not create backup file
-set noswapfile                      " do not create swap file
-set backupcopy=yes                  " overwrite the original file
 set clipboard=unnamed               " use system clipboard
-
-" file encoding setting
-set encoding=utf-8
-set termencoding=utf-8
-set fileencoding=utf-8
-set fileencodings=gb2312,utf-8,gbk
-set fileformat=unix
-
-" set colorscheme
-syntax on                           " highlight syntax
-set background=dark                 " I link dark background
-try
-    if has("gui_running")
-        colorscheme solarized
-    else
-        colorscheme molokai
-    endif
-catch /^Vim\%((\a\+)\)\=:E185/
-    colorscheme desert
-endtry
 
 " set gui interface
 if has("gui_running")
@@ -164,60 +81,122 @@ if has("gui_running")
     endif
 endif
 
-" set folder method independently
-autocmd FileType c,cpp,python setlocal foldmethod=indent
-
 " restore the last quit position when open file.
 autocmd BufReadPost *
             \ if line("'\"") > 0 && line("'\"") <= line("$") |
             \     exe "normal g'\"" |
             \ endif
 
+" move between windows
+nmap <C-h> <C-w>h
+nmap <C-j> <C-w>j
+nmap <C-k> <C-w>k
+nmap <C-l> <C-w>l
+" swtich between last two buffers
+nmap <C-e> :b#<CR>
+" don't highlight current search
+nmap <C-c> :silent noh<CR>
+" navigate in quickfix window
+nmap <C-n> :cn<CR>
+nmap <C-p> :cp<CR>
+"}}}
+
+""" Plugin Settings: {{{
+" Use Vundle to manage plugins
+filetype off
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+Plugin 'VundleVim/Vundle.vim'
+Plugin 'altercation/vim-colors-solarized'
+Plugin 'tomasr/molokai'
+Plugin 'Lokaltog/vim-powerline'
+Plugin 'kien/ctrlp.vim'
+Plugin 'dkprice/vim-easygrep'
+Plugin 'jlanzarotta/bufexplorer'
+Plugin 'scrooloose/nerdtree'
+Plugin 'majutsushi/tagbar'
+Plugin 'aceofall/gtags.vim'
+Plugin 'vim-scripts/Mark'
+Plugin 'easymotion/vim-easymotion'
+Plugin 'scrooloose/nerdcommenter'
+Plugin 'scrooloose/syntastic'
+Plugin 'Valloric/YouCompleteMe'
+Plugin 'rdnetto/YCM-Generator'
+Plugin 'honza/vim-snippets'
+Plugin 'SirVer/ultisnips'
+Plugin 'vim-scripts/CmdlineComplete'
+Plugin 'bronson/vim-trailing-whitespace'
+Plugin 'Raimondi/delimitMate'
+Plugin 'godlygeek/tabular'
+Plugin 'tpope/vim-fugitive'
+Plugin 'nvie/vim-flake8'
+Plugin 'tmhedberg/SimpylFold'
+Plugin 'vim-scripts/indentpython.vim'
+call vundle#end()
+filetype plugin indent on
+
+" set map leader for all plugin bindings
+let mapleader = ","
+let maplocalleader = "\\"
+
+" set colorscheme
+syntax on                           " highlight syntax
+set background=dark
+try
+    if has("gui_running")
+        colorscheme solarized
+    else
+        colorscheme molokai
+    endif
+    set cursorline                  " highlight current line
+    set cursorcolumn                " highlight current column
+catch
+    colorscheme desert
+endtry
+
+" use graceful power line
+let g:Powerline_colorscheme = 'solarized256'
+
+" tagbar setting
+nmap <leader>t :TagbarToggle<cr>
+let g:tagbar_left = 1
+let g:tagbar_width = 30
+let g:tagbar_autofocus = 1
+let g:tagbar_expand = 1
+
+" NERDTree setting
+nmap <leader>f :NERDTreeToggle<CR>
+let g:NERDTreeWinPos = 'right'
+let g:NERDTreeWinSize = 30
+let g:NERDTreeNaturalSort = 1
+let g:NERDTreeHijackNetrw = 1
+let g:NERDTreeQuitOnOpen = 1
+let g:NERDTreeAutoDeleteBuffer = 1
 " close vim if the only window left open is a NERDTree
 autocmd BufEnter *
             \ if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") |
             \     q |
             \ endif
 
-" }}}
-
-" Key Bindings: {{{
-let mapleader = ","
-let maplocalleader = "\\"
-
-" map space -> toggle fold
-map <Space> za
-
-" move between windows
-nmap <C-h> <C-w>h
-nmap <C-j> <C-w>j
-nmap <C-k> <C-w>k
-nmap <C-l> <C-w>l
-
-" switch between 2 last buffers
-nmap <leader>bb :b#<CR>
-
-" make shift-insert as paste in insert mode
-map <S-Insert> <MiddleMouse>
-map! <S-Insert> <MiddleMouse>
-
-" disable search match highlight
-nmap <leader>l :silent noh<CR>
-
-"  open CtrlP to search file to edit
-let g:ctrlp_map = '<leader>sf'
+" CtrlP setting: search file, mru, buffer
+let g:ctrlp_map = '<leader>pf'
 let g:ctrlp_cmd = 'CtrlP'
-nmap <leader>sr :CtrlPMRUFiles<CR>
-nmap <leader>sb :CtrlPBuffer<CR>
+nmap <leader>pr :CtrlPMRUFiles<CR>
+nmap <leader>pb :CtrlPBuffer<CR>
 
-" open file explorer
-nmap <leader>f :NERDTreeToggle<CR>
-
-" open tag bar
-nmap <leader>t :TagbarToggle<cr>
-
-" goto definition
+" YouCompleteMe setting
 nmap <leader>g :YcmCompleter GoToDefinitionElseDeclaration<CR>
+let g:ycm_autoclose_preview_window_after_completion = 1
+let g:ycm_key_invoke_completion = '<leader>;'
+let g:ycm_confirm_extra_conf = 0
+let g:ycm_global_ycm_extra_conf = '~/.ycm_extra_conf.py'
+let g:ycm_seed_identifiers_with_syntax = 1
+let g:ycm_complete_in_comments = 1
+
+" UltiSnips setting
+let g:UltiSnipsExpandTrigger = "<C-j>"
+let g:UltiSnipsJumpForwardTrigger = "<C-j>"
+let g:UltiSnipsJumpBackwardTrigger = "<C-k>"
 
 " delete tailing whitespace
 nmap <leader><space> :FixWhitespace<CR>
@@ -226,6 +205,28 @@ vmap <leader><space> :FixWhitespace<CR>
 " align text with tabularize
 nmap <leader>a :Tab /
 vmap <leader>a :Tab /
+
+" delimitMate setting: auto close quotes
+let delimitMate_expand_cr = 1
+autocmd FileType python let b:delimitMate_nesting_quotes = ['"']
+
+" gtags setting
+set cscopetag
+set cscopeprg='gtags-cscope'
+let g:Gtags_Auto_Update = 1
+let g:GtagsCscope_Auto_Load = 1
+let g:GtagsCscope_Quiet = 1
+let g:GtagsCscope_Auto_Map = 0
+nmap <leader>ss :cs find s <C-R>=expand("<cword>")<CR><CR>
+nmap <leader>sg :cs find g <C-R>=expand("<cword>")<CR><CR>
+nmap <leader>sc :cs find c <C-R>=expand("<cword>")<CR><CR>
+nmap <leader>st :cs find t <C-R>=expand("<cword>")<CR><CR>
+nmap <leader>se :cs find e <C-R>=expand("<cword>")<CR><CR>
+nmap <leader>sf :cs find f <C-R>=expand("<cfile>")<CR><CR>
+nmap <leader>si :cs find i <C-R>=expand("<cfile>")<CR><CR>
+nmap <leader>sn :tn<CR>
+nmap <leader>sp :tp<CR>
+nmap <C-LeftMouse> :cs find d <C-R>=expand("<cword>")<CR>:<C-R>=line('.')<CR>:%<CR>
 
 " }}}
 
