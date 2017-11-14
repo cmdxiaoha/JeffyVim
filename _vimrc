@@ -1,8 +1,9 @@
 "=============================================================================
-" Vim configuration for C/C++/Python programming.
+" Vim configuration.
 "=============================================================================
 
 """ Basic Settings: {{{
+
 " out of Vi compatible mode
 set nocompatible
 
@@ -99,9 +100,11 @@ nmap <C-c> :silent noh<CR>
 " navigate in quickfix window
 nmap <C-n> :cn<CR>
 nmap <C-p> :cp<CR>
+
 "}}}
 
 """ Plugin Settings: {{{
+
 " Use Vundle to manage plugins
 filetype off
 set rtp+=~/.vim/bundle/Vundle.vim
@@ -119,9 +122,7 @@ Plugin 'aceofall/gtags.vim'
 Plugin 'vim-scripts/Mark'
 Plugin 'easymotion/vim-easymotion'
 Plugin 'scrooloose/nerdcommenter'
-Plugin 'scrooloose/syntastic'
 Plugin 'Valloric/YouCompleteMe'
-Plugin 'rdnetto/YCM-Generator'
 Plugin 'honza/vim-snippets'
 Plugin 'SirVer/ultisnips'
 Plugin 'vim-scripts/CmdlineComplete'
@@ -129,9 +130,6 @@ Plugin 'bronson/vim-trailing-whitespace'
 Plugin 'Raimondi/delimitMate'
 Plugin 'godlygeek/tabular'
 Plugin 'tpope/vim-fugitive'
-Plugin 'nvie/vim-flake8'
-Plugin 'tmhedberg/SimpylFold'
-Plugin 'vim-scripts/indentpython.vim'
 call vundle#end()
 filetype plugin indent on
 
@@ -162,7 +160,6 @@ nmap <leader>t :TagbarToggle<cr>
 let g:tagbar_left = 1
 let g:tagbar_width = 30
 let g:tagbar_autofocus = 1
-let g:tagbar_expand = 1
 
 " NERDTree setting
 nmap <leader>f :NERDTreeToggle<CR>
@@ -183,6 +180,10 @@ let g:ctrlp_map = '<leader>pf'
 let g:ctrlp_cmd = 'CtrlP'
 nmap <leader>pr :CtrlPMRUFiles<CR>
 nmap <leader>pb :CtrlPBuffer<CR>
+
+" EasyGrep setting
+let g:EasyGrepMode = 2
+let g:EasyGrepRecursive = 1
 
 " YouCompleteMe setting
 nmap <leader>g :YcmCompleter GoToDefinitionElseDeclaration<CR>
