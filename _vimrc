@@ -88,6 +88,9 @@ autocmd BufReadPost *
             \     exe "normal g'\"" |
             \ endif
 
+" open QuickFix horizontally with line wrap
+autocmd FileType qf wincmd J | setlocal wrap
+
 " move between windows
 nmap <C-h> <C-w>h
 nmap <C-j> <C-w>j
