@@ -191,12 +191,13 @@ let g:EasyGrepRecursive = 1
 " YouCompleteMe setting
 nmap <leader>g :YcmCompleter GoToDefinitionElseDeclaration<CR>
 let g:ycm_autoclose_preview_window_after_completion = 1
-let g:ycm_key_invoke_completion = '<leader>;'
+let g:ycm_key_invoke_completion = '<C-l>'
 let g:ycm_confirm_extra_conf = 0
 let g:ycm_global_ycm_extra_conf = '~/.ycm_extra_conf.py'
 let g:ycm_seed_identifiers_with_syntax = 1
 let g:ycm_complete_in_comments = 1
 let g:ycm_add_preview_to_completeopt = 1
+let g:ycm_autoclose_preview_window_after_completion = 0
 let g:ycm_autoclose_preview_window_after_insertion = 1
 
 " UltiSnips setting
