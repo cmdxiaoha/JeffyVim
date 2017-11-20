@@ -35,7 +35,8 @@ set fileformat=unix
 set foldenable                      " fold lines
 set foldmethod=marker               " default use marker to fold
 set foldlevel=99                    " don't fold at startup
-autocmd FileType c,cpp,python setlocal foldmethod=syntax
+autocmd FileType c,cpp setlocal foldmethod=syntax
+autocmd FileType python setlocal foldmethod=indent
 
 " misc setting
 set number                          " show line number
@@ -126,6 +127,7 @@ Plugin 'vim-scripts/Mark'
 Plugin 'easymotion/vim-easymotion'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'Valloric/YouCompleteMe'
+Plugin 'rdnetto/YCM-Generator'
 Plugin 'honza/vim-snippets'
 Plugin 'SirVer/ultisnips'
 Plugin 'vim-scripts/CmdlineComplete'
@@ -199,9 +201,55 @@ let g:ycm_confirm_extra_conf = 0
 let g:ycm_global_ycm_extra_conf = '~/.ycm_extra_conf.py'
 let g:ycm_seed_identifiers_with_syntax = 1
 let g:ycm_complete_in_comments = 1
-let g:ycm_add_preview_to_completeopt = 1
-let g:ycm_autoclose_preview_window_after_completion = 0
-let g:ycm_autoclose_preview_window_after_insertion = 1
+function! s:onCompleteDone() " {{{
+  let abbr = v:completed_item.abbr
+  let startIdx = stridx(abbr,"(")
+  let endIdx = strridx(abbr,")")
+  if endIdx - startIdx > 1
+    let argsStr = strpart(abbr, startIdx+1, endIdx - startIdx -1)
+
+    let argsList = []
+    let arg = ''
+    let countParen = 0
+    for i in range(strlen(argsStr))
+      if argsStr[i] == ',' && countParen == 0
+        call add(argsList, arg)
+        let arg = ''
+      elseif argsStr[i] == '('
+        let countParen += 1
+        let arg = arg . argsStr[i]
+      elseif argsStr[i] == ')'
+        let countParen -= 1
+        let arg = arg . argsStr[i]
+      else
+        let arg = arg . argsStr[i]
+      endif
+    endfor
+    if arg != '' && countParen == 0
+      call add(argsList, arg)
+    endif
+  else
+    let argsList = []
+  endif
+
+  let snippet = '('
+  let c = 1
+  for i in argsList
+    if c > 1
+      let snippet = snippet . ", "
+    endif
+    " strip space
+    let arg = substitute(i, '^\s*\(.\{-}\)\s*$', '\1', '')
+    let snippet = snippet . '${' . c . ":" . arg . '}'
+    let c += 1
+  endfor
+  let snippet = snippet . ')' . "$0"
+  return UltiSnips#Anon(snippet)
+endfunction "}}}
+imap <expr> (
+      \ pumvisible() && exists('v:completed_item') && !empty(v:completed_item) &&
+      \ v:completed_item.word != '' && v:completed_item.kind == 'f' ?
+      \ "\<C-R>=\<SID>onCompleteDone()\<CR>" : "<Plug>delimitMate("
 
 " UltiSnips setting
 let g:UltiSnipsExpandTrigger = "<C-j>"
