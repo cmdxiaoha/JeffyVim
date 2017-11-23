@@ -92,18 +92,24 @@ autocmd BufReadPost *
 " open QuickFix horizontally with line wrap
 autocmd FileType qf wincmd J | setlocal wrap
 
+" key mappings, as less as can
 " move between windows
 nmap <C-h> <C-w>h
 nmap <C-j> <C-w>j
 nmap <C-k> <C-w>k
 nmap <C-l> <C-w>l
-" swtich between last two buffers
-nmap <C-e> :b#<CR>
-" don't highlight current search
-nmap <C-c> :silent noh<CR>
 " navigate in quickfix window
 nmap <C-n> :cn<CR>
 nmap <C-p> :cp<CR>
+
+" set map leader
+let mapleader = ","
+let maplocalleader = "\\"
+
+" swtich between last two buffers
+nmap <leader>bb :b#<CR>
+" don't highlight current search
+nmap <leader>l :silent noh<CR>
 
 "}}}
 
@@ -140,10 +146,6 @@ Plugin 'tmhedberg/SimpylFold'
 Plugin 'vim-scripts/indentpython.vim'
 call vundle#end()
 filetype plugin indent on
-
-" set map leader for all plugin bindings
-let mapleader = ","
-let maplocalleader = "\\"
 
 " set colorscheme
 syntax on                           " highlight syntax
@@ -285,6 +287,34 @@ nmap <leader>si :cs find i <C-R>=expand("<cfile>")<CR><CR>
 nmap <leader>sn :tn<CR>
 nmap <leader>sp :tp<CR>
 nmap <C-LeftMouse> :cs find d <C-R>=expand("<cword>")<CR>:<C-R>=line('.')<CR>:%<CR>
+nmap <C-[> :cs find c <C-R>=expand("<cword>")<CR><CR>
 
 " }}}
 
+""" Other Settings: {{{
+
+" auto save and load session
+let g:AutoSessionFile = ".project.vim"
+let g:OrignalPwd = getcwd()
+
+function! LoadSession()
+    exe "source ".g:AutoSessionFile
+endfunction
+
+function! SaveSession()
+    exe "mks! ".g:OrignalPwd."/".g:AutoSessionFile
+endfunction
+
+if filereadable(g:AutoSessionFile)
+    if argc() == 0
+        au VimEnter * call LoadSession()
+        au VimLeave * call SaveSession()
+    endif
+endif
+nmap <leader>ps :call SaveSession()<CR>
+
+" view man page in VIM
+source $VIMRUNTIME/ftplugin/man.vim
+nmap K :Man <C-R>=expand("<cword>")<CR><CR>
+
+" }}}
