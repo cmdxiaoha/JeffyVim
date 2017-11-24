@@ -48,7 +48,7 @@ set ruler                           " line and column number of the cursor posit
 set wildmenu                        " enhanced command completion
 set wildmode=list:longest,full      " command completion mode
 set laststatus=2                    " always show the status line
-set mouse=a                         " use mouse in all mode
+set mouse=                          " do not use mouse in all mode
 set noerrorbells                    " do not use error bell
 set novisualbell                    " do not use visual bell
 set t_vb=                           " do not use terminal bell
@@ -286,7 +286,6 @@ nmap <leader>sf :cs find f <C-R>=expand("<cfile>")<CR><CR>
 nmap <leader>si :cs find i <C-R>=expand("<cfile>")<CR><CR>
 nmap <leader>sn :tn<CR>
 nmap <leader>sp :tp<CR>
-nmap <C-LeftMouse> :cs find d <C-R>=expand("<cword>")<CR>:<C-R>=line('.')<CR>:%<CR>
 nmap <C-[> :cs find c <C-R>=expand("<cword>")<CR><CR>
 
 " }}}
